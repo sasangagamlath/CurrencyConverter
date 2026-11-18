@@ -22,15 +22,20 @@
                     <label>Frankfurter API URL</label>
                     <validate>validate-url</validate>
                 </field>
-                <field id="default_from" translate="label comment" type="text" sortOrder="10" showInDefault="1"
+                <field id="default_currency_from" translate="label comment" type="text" sortOrder="10" showInDefault="1"
                        showInWebsite="1" showInStore="1">
                     <label>Default Currency "From"</label>
                     <comment>Eg: AED</comment>
                 </field>
-                <field id="default_to" translate="label comment" type="text" sortOrder="15" showInDefault="1"
+                <field id="default_currency_to" translate="label comment" type="text" sortOrder="15" showInDefault="1"
                        showInWebsite="1" showInStore="1">
                     <label>Default Currency "To"</label>
                     <comment>Eg: LKR</comment>
+                </field>
+                <field id="curl_time_out" translate="label comment" type="text" sortOrder="20" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Curl Time Out</label>
+                    <validate>validate-not-negative-number</validate>
                 </field>
             </group>
         </section>

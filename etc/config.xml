@@ -8,9 +8,10 @@
     <default>
         <currency_converter>
             <general>
-                <api_url>https://api.frankfurter.dev/</api_url>
-                <default_from>AED</default_from>
-                <default_to>LKR</default_to>
+                <api_url>https://api.frankfurter.dev/v2/</api_url>
+                <default_currency_from>AED</default_currency_from>
+                <default_currency_to>LKR</default_currency_to>
+                <curl_time_out>10</curl_time_out>
             </general>
         </currency_converter>
     </default>
