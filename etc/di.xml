@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2026 All rights reserved
+  ~ @author Charaka Gamlath <sasangagamlath@gmail.com>
+  -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <virtualType name="Charaka\CurrencyConverter\Logger\Handler" type="Magento\Framework\Logger\Handler\Base">
+        <arguments>
+            <argument name="fileName" xsi:type="string">/var/log/frankfurter-currency-converter.log</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Charaka\CurrencyConverter\Logger\Logger" type="Magento\Framework\Logger\Monolog">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="debug" xsi:type="object">Charaka\CurrencyConverter\Logger\Handler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Charaka\CurrencyConverter\Model\ApiCall">
+        <arguments>
+            <argument name="logger" xsi:type="object">Charaka\CurrencyConverter\Logger\Logger</argument>
+        </arguments>
+    </type>
+</config>
