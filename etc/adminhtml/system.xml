@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2026 All rights reserved
+  ~ @author Charaka Gamlath <sasangagamlath@gmail.com>
+  -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="charaka" sortOrder="10000">
+            <label>Charaka</label>
+        </tab>
+        <section id="currency_converter" translate="label" type="text" sortOrder="1000" showInDefault="1"
+                 showInWebsite="1" showInStore="1">
+            <class>separator-top</class>
+            <label>Currency Converter Configuration</label>
+            <tab>charaka</tab>
+            <resource>Charaka_CurrencyConverter::config</resource>
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1">
+                <label>Default Configs</label>
+                <field id="api_url" translate="label comment" type="text" sortOrder="5" showInDefault="1"
+                       showInWebsite="0" showInStore="0">
+                    <label>Frankfurter API URL</label>
+                    <validate>validate-url</validate>
+                </field>
+                <field id="default_from" translate="label comment" type="text" sortOrder="10" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Default Currency "From"</label>
+                    <comment>Eg: AED</comment>
+                </field>
+                <field id="default_to" translate="label comment" type="text" sortOrder="15" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Default Currency "To"</label>
+                    <comment>Eg: LKR</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

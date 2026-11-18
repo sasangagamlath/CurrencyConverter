@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2026 All rights reserved
+  ~ @author Charaka Gamlath <sasangagamlath@gmail.com>
+  -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:App/Config/etc/config.xsd">
+    <default>
+        <currency_converter>
+            <general>
+                <api_url>https://api.frankfurter.dev/</api_url>
+                <default_from>AED</default_from>
+                <default_to>LKR</default_to>
+            </general>
+        </currency_converter>
+    </default>
+</config>

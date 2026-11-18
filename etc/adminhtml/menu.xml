@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2026 All rights reserved
+  ~ @author Charaka Gamlath <sasangagamlath@gmail.com>
+  -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Charaka_CurrencyConverter::menu" title="Charaka" translate="title" module="Charaka_CurrencyConverter"
+             sortOrder="10000" resource="Charaka_CurrencyConverter::config"/>
+        <add action="adminhtml/system_config/edit/section/currency_converter" id="Charaka_CurrencyConverter::config"
+             module="Charaka_CurrencyConverter" parent="Charaka_CurrencyConverter::menu"
+             resource="Charaka_CurrencyConverter::config" sortOrder="99999" title="Currency Converter Configs"/>
+    </menu>
+</config>
