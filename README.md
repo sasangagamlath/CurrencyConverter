@@ -21,8 +21,6 @@ A Magento 2 module that adds a storefront **Currency Exchange Converter** page p
 |------|-------------|
 | Magento | 2.4.x (Open Source / Adobe Commerce) |
 | PHP | 8.3+ |
-|
-|
 
 ## Installation
 
