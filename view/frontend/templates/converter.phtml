@@ -1,3 +1,81 @@
 <?php
+/** @var \Charaka\CurrencyConverter\Block\CurrencyConverter $block */
+/** @var \Magento\Framework\Escaper $escaper */
 
+$currencies = $block->getCurrencies();
+$params = $block->getParams();
+$convertedAmount = $block->getConvertedAmount();
 ?>
+
+<div class="charaka-cc-wrapper">
+<?php if ($currencies === []): ?>
+    <div class="message error">
+        <span><?= $escaper->escapeHtml(__('API Error. Please try again.')) ?></span>
+    </div>
+<?php else: ?>
+<form class="charaka-cc-form" action="<?= $escaper->escapeUrl($block->getUrl('currencyconverter')) ?>" method="get">
+    <input type="hidden" name="days" value=""/>
+    <div class="charaka-cc-controls">
+        <div class="field amount">
+            <label class="label" for="cc-amount">
+                <span><?= $escaper->escapeHtml(__('Amount')) ?></span>
+            </label>
+            <input id="cc-amount" name="amount" type="number" step="any" min="0.0001" required="required" value="<?= $params['amount']?>"/>
+        </div>
+
+        <div class="field from">
+            <label class="label" for="cc-from">
+                <span></span>
+            </label>
+            <select id="cc-from" name="from">
+                <?php foreach ($currencies as $code => $name): ?>
+                    <option value="<?= $escaper->escapeHtmlAttr($code) ?>"
+                        <?= $code === $params['from'] ? 'selected="selected"' : '' ?>>
+                        <?= $escaper->escapeHtml($code . ' - ' . $name) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        <div class="field swap">
+            <button type="submit" name="action" value="swap" class="action secondary charaka-cc-swap-btn" title="<?= $escaper->escapeHtmlAttr(__('Swap Currencies')) ?>">&#8646; <?= $escaper->escapeHtml(__('Swap')) ?>
+            </button>
+        </div>
+
+        <div class="field to">
+            <label class="label" for="cc-to">
+                <span><?= $escaper->escapeHtml(__('To')) ?></span>
+            </label>
+            <select id="cc-to" name="to">
+                <?php foreach ($currencies as $code => $name): ?>
+                    <option value="<?= $escaper->escapeHtmlAttr($code) ?>"
+                        <?= $code === $params['to'] ? 'selected="selected"' : '' ?>>
+                        <?= $escaper->escapeHtml($code . ' - ' . $name) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        <div class="field submit">
+            <button type="submit" name="action" value="convert" class="action primary">
+                <span><?= $escaper->escapeHtml(__('Convert')) ?></span>
+            </button>
+        </div>
+    </div>
+</form>
+    <?php if ($convertedAmount !== null): ?>
+        <div class="charaka-cc-result">
+            <div class="charaka-cc-conversion">
+                    <span class="source">
+                        <?= $escaper->escapeHtml(number_format($params['amount'], 2) . ' ' . $params['from']) ?> =
+                    </span>
+                <strong class="target">
+                    <?= $escaper->escapeHtml(number_format($convertedAmount, 4) . ' ' . $params['to']) ?>
+                </strong>
+            </div>
+        </div>
+    <?php else: ?>
+        <div class="message warning">
+            <span><?= $escaper->escapeHtml(__('Exchange rate data is unavailable.')) ?></span>
+        </div>
+    <?php endif; ?>
+<?php endif; ?>
+</div>
