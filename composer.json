@@ -1,0 +1,29 @@
+{
+    "name": "charaka/module-currency-converter",
+    "description": "Magento 2 module that adds a storefront currency exchange converter page with current rate, historical chart and swap control, powered by the Frankfurter API.",
+    "type": "magento2-module",
+    "version": "1.0.0",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Charaka Gamlath",
+            "email": "sasangagamlath@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.3",
+        "magento/framework": "*",
+        "magento/module-backend": "*",
+        "magento/module-config": "*",
+        "magento/module-store": "*",
+        "magento/module-theme": "*"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Charaka\\CurrencyConverter\\": ""
+        }
+    }
+}
