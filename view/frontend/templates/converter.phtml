@@ -5,77 +5,104 @@
 $currencies = $block->getCurrencies();
 $params = $block->getParams();
 $convertedAmount = $block->getConvertedAmount();
+
+$history = $block->getHistoryData();
+$points = $block->generateChartData($history);
 ?>
 
 <div class="charaka-cc-wrapper">
-<?php if ($currencies === []): ?>
-    <div class="message error">
-        <span><?= $escaper->escapeHtml(__('API Error. Please try again.')) ?></span>
-    </div>
-<?php else: ?>
-<form class="charaka-cc-form" action="<?= $escaper->escapeUrl($block->getUrl('currencyconverter')) ?>" method="get">
-    <input type="hidden" name="days" value=""/>
-    <div class="charaka-cc-controls">
-        <div class="field amount">
-            <label class="label" for="cc-amount">
-                <span><?= $escaper->escapeHtml(__('Amount')) ?></span>
-            </label>
-            <input id="cc-amount" name="amount" type="number" step="any" min="0.0001" required="required" value="<?= $params['amount']?>"/>
+    <?php if ($currencies === []): ?>
+        <div class="message error">
+            <span><?= $escaper->escapeHtml(__('API Error. Please try again.')) ?></span>
         </div>
+    <?php else: ?>
+        <form class="charaka-cc-form" action="<?= $escaper->escapeUrl($block->getUrl('currencyconverter')) ?>"
+              method="get">
+            <div class="charaka-cc-controls">
+                <div class="field amount">
+                    <label class="label" for="cc-amount">
+                        <span><?= $escaper->escapeHtml(__('Amount')) ?></span>
+                    </label>
+                    <input id="cc-amount" name="amount" type="number" step="any" min="0.0001" required="required"
+                           value="<?= $params['amount'] ?>"/>
+                </div>
 
-        <div class="field from">
-            <label class="label" for="cc-from">
-                <span></span>
-            </label>
-            <select id="cc-from" name="from">
-                <?php foreach ($currencies as $code => $name): ?>
-                    <option value="<?= $escaper->escapeHtmlAttr($code) ?>"
-                        <?= $code === $params['from'] ? 'selected="selected"' : '' ?>>
-                        <?= $escaper->escapeHtml($code . ' - ' . $name) ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-        </div>
-        <div class="field swap">
-            <button type="submit" name="action" value="swap" class="action secondary charaka-cc-swap-btn" title="<?= $escaper->escapeHtmlAttr(__('Swap Currencies')) ?>">&#8646; <?= $escaper->escapeHtml(__('Swap')) ?>
-            </button>
-        </div>
+                <div class="field from">
+                    <label class="label" for="cc-from">
+                        <span><?= $escaper->escapeHtml(__('From')) ?></span>
+                    </label>
+                    <select id="cc-from" name="from">
+                        <?php foreach ($currencies as $code => $name): ?>
+                            <option value="<?= $escaper->escapeHtmlAttr($code) ?>"
+                                <?= $code === $params['from'] ? 'selected="selected"' : '' ?>>
+                                <?= $escaper->escapeHtml($code . ' - ' . $name) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="field swap">
+                    <button type="submit" name="action" value="swap" class="action secondary charaka-cc-swap-btn"
+                            title="<?= $escaper->escapeHtmlAttr(__('Swap Currencies')) ?>">
+                        &#8646; <?= $escaper->escapeHtml(__('Swap')) ?>
+                    </button>
+                </div>
 
-        <div class="field to">
-            <label class="label" for="cc-to">
-                <span><?= $escaper->escapeHtml(__('To')) ?></span>
-            </label>
-            <select id="cc-to" name="to">
-                <?php foreach ($currencies as $code => $name): ?>
-                    <option value="<?= $escaper->escapeHtmlAttr($code) ?>"
-                        <?= $code === $params['to'] ? 'selected="selected"' : '' ?>>
-                        <?= $escaper->escapeHtml($code . ' - ' . $name) ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-        </div>
-        <div class="field submit">
-            <button type="submit" name="action" value="convert" class="action primary">
-                <span><?= $escaper->escapeHtml(__('Convert')) ?></span>
-            </button>
-        </div>
-    </div>
-</form>
-    <?php if ($convertedAmount !== null): ?>
-        <div class="charaka-cc-result">
-            <div class="charaka-cc-conversion">
+                <div class="field to">
+                    <label class="label" for="cc-to">
+                        <span><?= $escaper->escapeHtml(__('To')) ?></span>
+                    </label>
+                    <select id="cc-to" name="to">
+                        <?php foreach ($currencies as $code => $name): ?>
+                            <option value="<?= $escaper->escapeHtmlAttr($code) ?>"
+                                <?= $code === $params['to'] ? 'selected="selected"' : '' ?>>
+                                <?= $escaper->escapeHtml($code . ' - ' . $name) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="field submit">
+                    <button type="submit" name="action" value="convert" class="action primary">
+                        <span><?= $escaper->escapeHtml(__('Convert')) ?></span>
+                    </button>
+                </div>
+            </div>
+        </form>
+        <?php if ($convertedAmount !== null): ?>
+            <div class="charaka-cc-result">
+                <div class="charaka-cc-conversion">
                     <span class="source">
                         <?= $escaper->escapeHtml(number_format($params['amount'], 2) . ' ' . $params['from']) ?> =
                     </span>
-                <strong class="target">
-                    <?= $escaper->escapeHtml(number_format($convertedAmount, 4) . ' ' . $params['to']) ?>
-                </strong>
+                    <strong class="target">
+                        <?= $escaper->escapeHtml(number_format($convertedAmount, 4) . ' ' . $params['to']) ?>
+                    </strong>
+                </div>
+            </div>
+        <?php else: ?>
+            <div class="message warning">
+                <span><?= $escaper->escapeHtml(__('Exchange rate data is unavailable.')) ?></span>
+            </div>
+        <?php endif; ?>
+
+
+    <?php endif; ?>
+    <?php if ($points !== ''): ?>
+        <div style="max-width: 600px; margin-top: 20px;">
+            <div style="display: flex; justify-content: space-between; font-size: 12px; color: #555;">
+                <span>High: <?= $escaper->escapeHtml((string)max($history)) ?></span>
+                <span>Low: <?= $escaper->escapeHtml((string)min($history)) ?></span>
+            </div>
+
+            <svg viewBox="0 0 600 160"
+                 style="width: 100%; height: 100%; border: 1px solid #ddd; background: #fafafa; margin: 6px 0;">
+                <polyline fill="none" stroke="#1979c3" stroke-width="2"
+                          points="<?= $escaper->escapeHtmlAttr($points) ?>"/>
+            </svg>
+
+            <div style="display: flex; justify-content: space-between; font-size: 12px; color: #555;">
+                <span><?= $escaper->escapeHtml((string)array_key_first($history)) ?></span>
+                <span><?= $escaper->escapeHtml((string)array_key_last($history)) ?></span>
             </div>
         </div>
-    <?php else: ?>
-        <div class="message warning">
-            <span><?= $escaper->escapeHtml(__('Exchange rate data is unavailable.')) ?></span>
-        </div>
     <?php endif; ?>
-<?php endif; ?>
 </div>

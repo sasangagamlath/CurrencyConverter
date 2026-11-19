@@ -8,11 +8,14 @@
     <default>
         <currency_converter>
             <general>
+                <enable_currency_conversion_page>1</enable_currency_conversion_page>
                 <api_url>https://api.frankfurter.dev/v2/</api_url>
                 <default_currency_from>AED</default_currency_from>
                 <default_currency_to>LKR</default_currency_to>
-                <curl_time_out>10</curl_time_out>
+                <curl_time_out>30</curl_time_out>
                 <asset_type>1</asset_type>
+                <history_show_period>90</history_show_period>
+                <debug_log>1</debug_log>
             </general>
         </currency_converter>
     </default>

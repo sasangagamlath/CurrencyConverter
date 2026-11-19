@@ -11,14 +11,10 @@ namespace Charaka\CurrencyConverter\Model;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ScopeInterface;
+use Charaka\CurrencyConverter\Model\Constants;
 
 class Config
 {
-    public const string XML_PATH_API_URL = 'currency_converter/general/api_url';
-    public const string XML_PATH_DEFAULT_CURRENCY_FROM = 'currency_converter/general/default_currency_from';
-    public const string XML_PATH_DEFAULT_CURRENCY_TO = 'currency_converter/general/default_currency_to';
-    public const string XML_PATH_CURL_TIME_OUT = 'currency_converter/general/curl_time_out';
-    public const string XML_PATH__ASSET_TYPE = 'currency_converter/general/asset_type';
 
     /**
      * @param ScopeConfigInterface $scopeConfig
@@ -35,7 +31,7 @@ class Config
      */
     public function getApiUrl(): string
     {
-        return $this->scopeConfig->getValue(self::XML_PATH_API_URL, ScopeInterface::SCOPE_STORE);
+        return $this->scopeConfig->getValue(Constants::XML_PATH_API_URL, ScopeInterface::SCOPE_STORE);
     }
 
     /**
@@ -45,7 +41,7 @@ class Config
      */
     public function getDefaultCurrencyFrom(): string
     {
-        return $this->scopeConfig->getValue(self::XML_PATH_DEFAULT_CURRENCY_FROM, ScopeInterface::SCOPE_STORE);
+        return $this->scopeConfig->getValue(Constants::XML_PATH_DEFAULT_CURRENCY_FROM, ScopeInterface::SCOPE_STORE);
     }
 
     /**
@@ -55,7 +51,7 @@ class Config
      */
     public function getDefaultCurrencyTo(): string
     {
-        return $this->scopeConfig->getValue(self::XML_PATH_DEFAULT_CURRENCY_TO, ScopeInterface::SCOPE_STORE);
+        return $this->scopeConfig->getValue(Constants::XML_PATH_DEFAULT_CURRENCY_TO, ScopeInterface::SCOPE_STORE);
     }
 
     /**
@@ -65,7 +61,7 @@ class Config
      */
     public function getCurlTimeout(): int
     {
-        return (int)$this->scopeConfig->getValue(self::XML_PATH_CURL_TIME_OUT, ScopeInterface::SCOPE_STORE);
+        return (int)$this->scopeConfig->getValue(Constants::XML_PATH_CURL_TIME_OUT, ScopeInterface::SCOPE_STORE);
     }
 
     /**
@@ -75,6 +71,39 @@ class Config
      */
     public function showOnlyCurrencyAssetType(): int
     {
-        return (int)$this->scopeConfig->getValue(self::XML_PATH__ASSET_TYPE, ScopeInterface::SCOPE_STORE);
+        return (int)$this->scopeConfig->getValue(Constants::XML_PATH_ASSET_TYPE, ScopeInterface::SCOPE_STORE);
+    }
+
+    /**
+     * Rate history date range
+     *
+     * @return int
+     */
+    public function rateHistoryDateRange(): int
+    {
+        return (int)$this->scopeConfig->getValue(
+            Constants::XML_PATH_RATE_HISTORY_DATE_RANGE,
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    /**
+     * Is enable currency conversion page
+     *
+     * @return int
+     */
+    public function isEnableCurrencyConversionPage(): int
+    {
+        return (int)$this->scopeConfig->getValue(Constants::XML_PATH_ENABLED, ScopeInterface::SCOPE_STORE);
+    }
+
+    /**
+     * Log api calls
+     *
+     * @return int
+     */
+    public function logApiCalls(): int
+    {
+        return (int)$this->scopeConfig->getValue(Constants::XML_PATH_DEBUG_LOG, ScopeInterface::SCOPE_STORE);
     }
 }

@@ -8,13 +8,7 @@
     <acl>
         <resources>
             <resource id="Magento_Backend::admin">
-                <resource id="Magento_Backend::stores">
-                    <resource id="Magento_Backend::stores_settings">
-                        <resource id="Magento_Config::config">
-                            <resource id="Charaka_CurrencyConverter::config" title="Currency Converter"/>
-                        </resource>
-                    </resource>
-                </resource>
+                <resource id="Charaka_CurrencyConverter::config" title="Currency Converter" sortOrder="9000"/>
             </resource>
         </resources>
     </acl>

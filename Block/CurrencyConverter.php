@@ -12,14 +12,10 @@ use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Charaka\CurrencyConverter\Model\ApiCall;
 use Charaka\CurrencyConverter\Model\Config;
+use Charaka\CurrencyConverter\Model\Constants;
 
 class CurrencyConverter extends Template
 {
-    public const string ASSET_TYPE_CURRENCY = 'currency';
-    public const string FILED_NAME = 'name';
-    public const string FILED_ISO_CODE = 'iso_code';
-    public const string FILED_TYPE = 'type';
-
 
     /**
      * @param Context $context
@@ -45,12 +41,12 @@ class CurrencyConverter extends Template
 
         $showCurrencies = [];
         foreach ($this->apiCall->getCurrencies() as $currency) {
-            if ($onlyCurrency && $currency[self::FILED_TYPE] != self::ASSET_TYPE_CURRENCY) {
+            if ($onlyCurrency && $currency[Constants::FIELD_TYPE] != Constants::FIELD_ASSET_TYPE_CURRENCY) {
                 continue;
             }
             $showCurrencies[] = $currency;
         }
-        return array_column($showCurrencies, self::FILED_NAME, self::FILED_ISO_CODE);
+        return array_column($showCurrencies, Constants::FIELD_NAME, Constants::FIELD_ISO_CODE);
     }
 
     /**
@@ -62,20 +58,27 @@ class CurrencyConverter extends Template
     {
         $request = $this->getRequest();
 
-        $from = strtoupper(trim((string)$request->getParam('from', $this->config->getDefaultCurrencyFrom())));
-        $to = strtoupper(trim((string)$request->getParam('to', $this->config->getDefaultCurrencyTo())));
-        $action = (string)$request->getParam('action');
-        $amount = (string)$request->getParam('amount', 1);
+        $from = strtoupper(trim((string)$request->getParam(
+            Constants::PARAM_FIELD_FROM,
+            $this->config->getDefaultCurrencyFrom()
+        )));
+        $to = strtoupper(trim((string)$request->getParam(
+            Constants::PARAM_FIELD_TO,
+            $this->config->getDefaultCurrencyTo()
+        )));
 
-        if ($action === 'swap') {
+        $amount = (string)$request->getParam(Constants::PARAM_FIELD_AMOUNT, 1);
+        $action = (string)$request->getParam(Constants::PARAM_FIELD_ACTION);
+
+        if ($action === Constants::PARAM_FIELD_SWAP) {
             [$from, $to] = [$to, $from];
         }
 
         return [
-            'from' => $from,
-            'to' => $to,
-            'amount' => $amount,
-            'days' => 30,
+            Constants::PARAM_FIELD_FROM => $from,
+            Constants::PARAM_FIELD_TO => $to,
+            Constants::PARAM_FIELD_AMOUNT => $amount,
+            Constants::PARAM_FIELD_DAYS => $this->config->rateHistoryDateRange(),
         ];
     }
 
@@ -87,7 +90,52 @@ class CurrencyConverter extends Template
     public function getConvertedAmount(): ?float
     {
         $params = $this->getParams();
-        $latestRate = $this->apiCall->getLatestRate($params['from'], $params['to']);
+        $latestRate = $this->apiCall->getLatestRate(
+            $params[Constants::PARAM_FIELD_FROM],
+            $params[Constants::PARAM_FIELD_TO]
+        );
         return (int)$params['amount'] * $latestRate;
+    }
+
+    /**
+     * Get history date using api
+     *
+     * @return array
+     */
+    public function getHistoryData(): array
+    {
+        $params = $this->getParams();
+        return $this->apiCall->getHistoricalRates(
+            $params[Constants::PARAM_FIELD_FROM],
+            $params[Constants::PARAM_FIELD_TO],
+            $params[Constants::PARAM_FIELD_DAYS]
+        );
+    }
+
+    /**
+     * Generate data to polyline points
+     *
+     * @param array $history
+     * @return string
+     */
+    public function generateChartData(array $history): string
+    {
+        $rates = array_values($history);
+        $count = count($rates);
+
+        $min = min($rates);
+        $max = max($rates);
+        $range = ($max - $min) ?: 1.0;
+        $points = [];
+
+        $width = 600;
+        $height = 160;
+        foreach ($rates as $index => $rate) {
+            $x = ($index / ($count - 1)) * $width;
+            $y = $height - (($rate - $min) / $range) * $height;
+            $points[] = round($x, 1) . ',' . round($y, 1);
+        }
+
+        return implode(' ', $points);
     }
 }

@@ -11,12 +11,11 @@ namespace Charaka\CurrencyConverter\Model;
 use Magento\Framework\HTTP\Client\Curl;
 use Magento\Framework\Serialize\Serializer\Json;
 use Charaka\CurrencyConverter\Model\Config;
+use Charaka\CurrencyConverter\Model\Constants;
 use Psr\Log\LoggerInterface;
 
 class ApiCall
 {
-    private const string CURRENCIES_ENDPOINT = 'currencies';
-    private const string CONVERSION_RATE_ENDPOINT = 'rate';
 
     /**
      * @param Curl $curl
@@ -39,7 +38,7 @@ class ApiCall
      */
     public function getCurrencies(): array
     {
-        $data = $this->request(self::CURRENCIES_ENDPOINT);
+        $data = $this->request(Constants::CURRENCIES_ENDPOINT);
         return is_array($data) ? $data : [];
     }
 
@@ -55,14 +54,43 @@ class ApiCall
         $conversionRate = 0;
         if (!empty($from) && !empty($to)) {
             $conversionRateEndpoint = sprintf(
-                self::CONVERSION_RATE_ENDPOINT . '/%s/%s',
+                Constants::CONVERSION_RATE_ENDPOINT . '/%s/%s',
                 rawurlencode(strtolower($from)),
                 rawurlencode(strtolower($to))
             );
             $conversionData = $this->request($conversionRateEndpoint);
-            $conversionRate = $conversionData['rate'];
+            $conversionRate = $conversionData[Constants::FIELD_RATE];
         }
         return $conversionRate;
+    }
+
+    /**
+     * Get history rates
+     *
+     * @param string $from
+     * @param string $to
+     * @param int $days
+     * @return array
+     */
+    public function getHistoricalRates(string $from, string $to, int $days): array
+    {
+        $endDate = gmdate('Y-m-d');
+        $startDate = gmdate('Y-m-d', strtotime(sprintf('-%d days', $days)));
+
+        $endpoint = sprintf(
+            Constants::CONVERSION_RATE_HISTORY_ENDPOINT . '%s&quotes=%s&from=%s&to=%s',
+            rawurlencode(strtolower($from)),
+            rawurlencode(strtolower($to)),
+            $startDate,
+            $endDate
+        );
+
+        $historyData = $this->request($endpoint);
+        if (!is_array($historyData)) {
+            return [];
+        }
+
+        return array_column($historyData, Constants::FIELD_RATE, Constants::FIELD_DATE);
     }
 
     /**
@@ -73,14 +101,14 @@ class ApiCall
      */
     private function request(string $endpoint): ?array
     {
-        $this->logger->debug('Requesting Currencies', ['endpoint' => $endpoint]);
+        $this->log('Requesting Currencies', ['endpoint' => $endpoint]);
 
         try {
             $this->curl->setTimeout($this->config->getCurlTimeout());
             $this->curl->get($this->config->getApiUrl() . $endpoint);
 
             if ($this->curl->getStatus() !== 200) {
-                $this->logger->debug('Requesting Currencies failed', [
+                $this->log('Requesting Currencies failed', [
                     'endpoint' => $this->config->getApiUrl() . $endpoint,
                     'status_code' => $this->curl->getStatus(),
                     'response' => $this->curl->getBody(),
@@ -90,7 +118,8 @@ class ApiCall
 
             $body = $this->curl->getBody();
             $decodedData = $this->json->unserialize($body);
-            $this->logger->debug('Requesting Currencies', ['body' => $body]);
+
+            $this->log('Requesting Currencies', ['body' => $body]);
 
             if (is_array($decodedData)) {
                 return $decodedData;
@@ -100,5 +129,19 @@ class ApiCall
         }
 
         return null;
+    }
+
+    /**
+     * Log data if enabled
+     *
+     * @param string $request
+     * @param array $data
+     * @return void
+     */
+    private function log(string $request, array $data = []): void
+    {
+        if ($this->config->logApiCalls()) {
+            $this->logger->debug($request, $data);
+        }
     }
 }

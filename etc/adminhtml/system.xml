@@ -17,31 +17,70 @@
             <resource>Charaka_CurrencyConverter::config</resource>
             <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1">
                 <label>Default Configs</label>
+                <field id="enable_currency_conversion_page" translate="label comment" type="select" sortOrder="1"
+                       showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <label>Enable Currency Conversion Page</label>
+                </field>
                 <field id="api_url" translate="label comment" type="text" sortOrder="5" showInDefault="1"
-                       showInWebsite="0" showInStore="0">
+                       showInWebsite="0" showInStore="0" canRestore="1">
                     <label>Frankfurter API URL</label>
                     <validate>validate-url</validate>
+                    <depends>
+                        <field id="*/*/enable_currency_conversion_page">1</field>
+                    </depends>
                 </field>
                 <field id="default_currency_from" translate="label comment" type="text" sortOrder="10" showInDefault="1"
                        showInWebsite="1" showInStore="1">
                     <label>Default Currency "From"</label>
                     <comment>Eg: AED</comment>
+                    <depends>
+                        <field id="*/*/enable_currency_conversion_page">1</field>
+                    </depends>
                 </field>
                 <field id="default_currency_to" translate="label comment" type="text" sortOrder="15" showInDefault="1"
                        showInWebsite="1" showInStore="1">
                     <label>Default Currency "To"</label>
                     <comment>Eg: LKR</comment>
+                    <depends>
+                        <field id="*/*/enable_currency_conversion_page">1</field>
+                    </depends>
                 </field>
                 <field id="curl_time_out" translate="label comment" type="text" sortOrder="20" showInDefault="1"
                        showInWebsite="1" showInStore="1">
                     <label>Curl Time Out</label>
                     <validate>validate-not-negative-number</validate>
+                    <depends>
+                        <field id="*/*/enable_currency_conversion_page">1</field>
+                    </depends>
                 </field>
-                <field id="asset_type" translate="label comment" type="select" sortOrder="20" showInDefault="1"
+                <field id="asset_type" translate="label comment" type="select" sortOrder="25" showInDefault="1"
                        showInWebsite="1" showInStore="1">
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <label>Show Only "currency" Asset Type</label>
                     <comment>If set to "Yes" it will exclude "crypto, metal" asset type</comment>
+                    <depends>
+                        <field id="*/*/enable_currency_conversion_page">1</field>
+                    </depends>
+                </field>
+                <field id="history_show_period" translate="label comment" type="text" sortOrder="30" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Rate History Show Period</label>
+                    <comment>Date period to show rate history range to current date</comment>
+                    <validate>validate-not-negative-number</validate>
+                    <depends>
+                        <field id="*/*/enable_currency_conversion_page">1</field>
+                    </depends>
+                </field>
+                <field id="debug_log" translate="label comment" type="select" sortOrder="35" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <label>Debug API Call's</label>
+                    <comment>Log api call/payloads to "var/log/frankfurter-currency-converter.log" file</comment>
+                    <depends>
+                        <field id="*/*/enable_currency_conversion_page">1</field>
+                    </depends>
                 </field>
             </group>
         </section>
