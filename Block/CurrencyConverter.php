@@ -15,6 +15,12 @@ use Charaka\CurrencyConverter\Model\Config;
 
 class CurrencyConverter extends Template
 {
+    public const string ASSET_TYPE_CURRENCY = 'currency';
+    public const string FILED_NAME = 'name';
+    public const string FILED_ISO_CODE = 'iso_code';
+    public const string FILED_TYPE = 'type';
+
+
     /**
      * @param Context $context
      * @param ApiCall $apiCall
@@ -35,7 +41,16 @@ class CurrencyConverter extends Template
      */
     public function getCurrencies(): array
     {
-        return array_column($this->apiCall->getCurrencies(), 'name', 'iso_code');
+        $onlyCurrency = $this->config->showOnlyCurrencyAssetType();
+
+        $showCurrencies = [];
+        foreach ($this->apiCall->getCurrencies() as $currency) {
+            if ($onlyCurrency && $currency[self::FILED_TYPE] != self::ASSET_TYPE_CURRENCY) {
+                continue;
+            }
+            $showCurrencies[] = $currency;
+        }
+        return array_column($showCurrencies, self::FILED_NAME, self::FILED_ISO_CODE);
     }
 
     /**

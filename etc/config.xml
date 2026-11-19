@@ -12,6 +12,7 @@
                 <default_currency_from>AED</default_currency_from>
                 <default_currency_to>LKR</default_currency_to>
                 <curl_time_out>10</curl_time_out>
+                <asset_type>1</asset_type>
             </general>
         </currency_converter>
     </default>

@@ -18,6 +18,7 @@ class Config
     public const string XML_PATH_DEFAULT_CURRENCY_FROM = 'currency_converter/general/default_currency_from';
     public const string XML_PATH_DEFAULT_CURRENCY_TO = 'currency_converter/general/default_currency_to';
     public const string XML_PATH_CURL_TIME_OUT = 'currency_converter/general/curl_time_out';
+    public const string XML_PATH__ASSET_TYPE = 'currency_converter/general/asset_type';
 
     /**
      * @param ScopeConfigInterface $scopeConfig
@@ -65,5 +66,15 @@ class Config
     public function getCurlTimeout(): int
     {
         return (int)$this->scopeConfig->getValue(self::XML_PATH_CURL_TIME_OUT, ScopeInterface::SCOPE_STORE);
+    }
+
+    /**
+     * Show asset type
+     *
+     * @return int
+     */
+    public function showOnlyCurrencyAssetType(): int
+    {
+        return (int)$this->scopeConfig->getValue(self::XML_PATH__ASSET_TYPE, ScopeInterface::SCOPE_STORE);
     }
 }

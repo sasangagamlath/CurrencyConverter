@@ -37,6 +37,12 @@
                     <label>Curl Time Out</label>
                     <validate>validate-not-negative-number</validate>
                 </field>
+                <field id="asset_type" translate="label comment" type="select" sortOrder="20" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <label>Show Only "currency" Asset Type</label>
+                    <comment>If set to "Yes" it will exclude "crypto, metal" asset type</comment>
+                </field>
             </group>
         </section>
     </system>
