@@ -94,7 +94,12 @@ class CurrencyConverter extends Template
             $params[Constants::PARAM_FIELD_FROM],
             $params[Constants::PARAM_FIELD_TO]
         );
-        return (int)$params['amount'] * $latestRate;
+
+        if ($latestRate === null) {
+            return null;
+        }
+
+        return (float)$params['amount'] * $latestRate;
     }
 
     /**
@@ -122,6 +127,10 @@ class CurrencyConverter extends Template
     {
         $rates = array_values($history);
         $count = count($rates);
+
+        if ($count < 2) {
+            return '';
+        }
 
         $min = min($rates);
         $max = max($rates);

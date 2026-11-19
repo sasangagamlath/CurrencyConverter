@@ -24,7 +24,7 @@ $points = $block->generateChartData($history);
                         <span><?= $escaper->escapeHtml(__('Amount')) ?></span>
                     </label>
                     <input id="cc-amount" name="amount" type="number" step="any" min="0.0001" required="required"
-                           value="<?= $params['amount'] ?>"/>
+                           value="<?= $escaper->escapeHtmlAttr($params['amount']) ?>"/>
                 </div>
 
                 <div class="field from">
@@ -71,7 +71,7 @@ $points = $block->generateChartData($history);
             <div class="charaka-cc-result">
                 <div class="charaka-cc-conversion">
                     <span class="source">
-                        <?= $escaper->escapeHtml(number_format($params['amount'], 2) . ' ' . $params['from']) ?> =
+                        <?= $escaper->escapeHtml(number_format((float)$params['amount'], 2) . ' ' . $params['from']) ?> =
                     </span>
                     <strong class="target">
                         <?= $escaper->escapeHtml(number_format($convertedAmount, 4) . ' ' . $params['to']) ?>

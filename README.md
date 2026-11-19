@@ -97,7 +97,7 @@ Config path prefix: `currency_converter/general/*`
 
 ## How to navigate to the Front End page
 
-1. Make sure **Enable Currency Conversion Page = Yes** (see section 4) and the cache is flushed.
+1. Make sure **Enable Currency Conversion Page = Yes** (see [Configuration fields](#configuration-fields)) and the cache is flushed.
 2. Open your storefront in a browser.
 3. Visit the page URL:
    ```

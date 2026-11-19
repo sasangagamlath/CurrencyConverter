@@ -51,17 +51,24 @@ class ApiCall
      */
     public function getLatestRate(string $from, string $to): ?float
     {
-        $conversionRate = 0;
-        if (!empty($from) && !empty($to)) {
-            $conversionRateEndpoint = sprintf(
-                Constants::CONVERSION_RATE_ENDPOINT . '/%s/%s',
-                rawurlencode(strtolower($from)),
-                rawurlencode(strtolower($to))
-            );
-            $conversionData = $this->request($conversionRateEndpoint);
-            $conversionRate = $conversionData[Constants::FIELD_RATE];
+        if (empty($from) || empty($to)) {
+            return null;
         }
-        return $conversionRate;
+
+        $conversionRateEndpoint = sprintf(
+            Constants::CONVERSION_RATE_ENDPOINT . '/%s/%s',
+            rawurlencode(strtolower($from)),
+            rawurlencode(strtolower($to))
+        );
+
+        $conversionData = $this->request($conversionRateEndpoint);
+        if (!is_array($conversionData) || !isset($conversionData[Constants::FIELD_RATE])
+            || !is_numeric($conversionData[Constants::FIELD_RATE])
+        ) {
+            return null;
+        }
+
+        return (float)$conversionData[Constants::FIELD_RATE];
     }
 
     /**
@@ -124,7 +131,11 @@ class ApiCall
             if (is_array($decodedData)) {
                 return $decodedData;
             }
-        } catch (\Throwable) {
+        } catch (\Throwable $e) {
+            $this->log('Requesting Currencies exception', [
+                'endpoint' => $this->config->getApiUrl() . $endpoint,
+                'error' => $e->getMessage(),
+            ]);
             return null;
         }
 

@@ -31,7 +31,7 @@ class Config
      */
     public function getApiUrl(): string
     {
-        return $this->scopeConfig->getValue(Constants::XML_PATH_API_URL, ScopeInterface::SCOPE_STORE);
+        return (string)$this->scopeConfig->getValue(Constants::XML_PATH_API_URL, ScopeInterface::SCOPE_STORE);
     }
 
     /**
@@ -41,7 +41,10 @@ class Config
      */
     public function getDefaultCurrencyFrom(): string
     {
-        return $this->scopeConfig->getValue(Constants::XML_PATH_DEFAULT_CURRENCY_FROM, ScopeInterface::SCOPE_STORE);
+        return (string)$this->scopeConfig->getValue(
+            Constants::XML_PATH_DEFAULT_CURRENCY_FROM,
+            ScopeInterface::SCOPE_STORE
+        );
     }
 
     /**
@@ -51,7 +54,10 @@ class Config
      */
     public function getDefaultCurrencyTo(): string
     {
-        return $this->scopeConfig->getValue(Constants::XML_PATH_DEFAULT_CURRENCY_TO, ScopeInterface::SCOPE_STORE);
+        return (string)$this->scopeConfig->getValue(
+            Constants::XML_PATH_DEFAULT_CURRENCY_TO,
+            ScopeInterface::SCOPE_STORE
+        );
     }
 
     /**
@@ -61,7 +67,10 @@ class Config
      */
     public function getCurlTimeout(): int
     {
-        return (int)$this->scopeConfig->getValue(Constants::XML_PATH_CURL_TIME_OUT, ScopeInterface::SCOPE_STORE);
+        return (int)$this->scopeConfig->getValue(
+            Constants::XML_PATH_CURL_TIME_OUT,
+            ScopeInterface::SCOPE_STORE
+        );
     }
 
     /**
